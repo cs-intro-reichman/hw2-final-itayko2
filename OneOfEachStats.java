@@ -1,4 +1,5 @@
 import java.util.Random;
+
 /**
  *  Computes some statistics about families in which the parents decide 
  *  to have children until they have at least one child of each gender.
@@ -9,21 +10,71 @@ import java.util.Random;
  */
 public class OneOfEachStats {
 	public static void main (String[] args) {
-		// Gets the two command-line arguments
 		int T = Integer.parseInt(args[0]);
 		int seed = Integer.parseInt(args[1]);
-		// Initailizes a random numbers generator with the given seed value
-        Random generator = new Random(seed);  
+        Random generator = new Random(seed);
 		
-		//// In the previous version of this program, you used a statement like:
-		//// double rnd = Math.random();
-		//// Where "rnd" is the variable that stores the generated random value.
-		//// In this version of the program, replace this statement with:
-		//// double rnd = generator.nextDouble();
-		//// This statement will generate a random value in the range [0,1),
-		//// just like you had in the previous version, except that the 
-		//// randomization will be based on the given seed.
-		//// This is the only change that you have to do in the program.
-		    
+		// Initializes counters
+		int numberOf2Children = 0;
+		int numberOf3Children = 0;
+		int numberOf4OrMoreChildren = 0;
+		
+		// The total number of children born in all T simulations.
+		double sumNumberOfChildren = 0;
+		
+		// Executes the simulation, T times
+		for (int i = 0; i < T; i++) {
+			boolean boy = false;
+		    boolean girl = false;
+		    int count = 0;
+		    while (!(boy && girl)) {
+			    double rnd = generator.nextDouble();
+			    if (rnd < 0.5) {
+				    boy = true;
+				    ////System.out.print("b ");
+			    } else {
+				    girl = true;
+				    ////System.out.print("g ");
+			    }
+			    count++;
+		    }
+		    //System.out.println();
+		    //System.out.println(count + " children.");
+			
+			// Update the counters
+			sumNumberOfChildren = sumNumberOfChildren + count; 
+			
+			if (count == 2) {
+				numberOf2Children++;
+			} else {
+			    if (count == 3) {
+			    	numberOf3Children++;
+			    } else {
+			        numberOf4OrMoreChildren++;
+			    }
+			}
+		}
+		
+		double avreage = sumNumberOfChildren / T;
+		
+		System.out.println("Average: " + avreage + " children to get at least one of each gender.");
+		System.out.println("Number of families with 2 children: " + numberOf2Children);
+		System.out.println("Number of families with 3 children: " + numberOf3Children);
+		System.out.println("Number of families with 4 or more children: " + numberOf4OrMoreChildren);
+		
+		// Calculates the maximum of all counters, and finds to which case it belongs
+		String mode = "The most common number of children is ";
+		int max = Math.max(Math.max(numberOf2Children, numberOf3Children),
+			               numberOf4OrMoreChildren);
+		if (max == numberOf2Children) {
+			mode = mode + "2.";
+		} else {
+			if (max == numberOf3Children) {
+				mode = mode + "3.";
+			} else {
+			    mode = mode + "4 or more.";
+			}
+		}
+		System.out.println(mode);
 	}
 }
